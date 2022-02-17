@@ -3,18 +3,17 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
 
+// Find all products
 router.get('/', (req, res) => {
-  // find all products
   Product.findAll().then((productData) => {
     // be sure to include its associated Category and Tag data **
     res.json(productData);
   });
-  // res.json({ success:true, hit: "Get Products" });
 });
 
-// get one product
+
+// Find a single product by its `id`
 router.get('/:id', (req, res) => {
-  // find a single product by its `id`
   Product.findOne(
     {
       where: { 
@@ -25,13 +24,13 @@ router.get('/:id', (req, res) => {
     res.json(productData);
   });
   // be sure to include its associated Category and Tag data **
-  // res.json({ success:true, hit: "Get Product" });
 });
 
-// create new product
+// Create a new product
 router.post('/', (req, res) => {
   Product.create(req.body)
     .then((product) => {
+
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
@@ -65,8 +64,10 @@ router.put('/:id', (req, res) => {
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })
     .then((productTags) => {
+
       // get list of current tag_ids
       const productTagIds = productTags.map(({ tag_id }) => tag_id);
+
       // create filtered list of new tag_ids
       const newProductTags = req.body.tagIds
         .filter((tag_id) => !productTagIds.includes(tag_id))
