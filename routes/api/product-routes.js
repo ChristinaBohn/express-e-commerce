@@ -31,24 +31,6 @@ router.get('/:id', (req, res) => {
 // create new product
 router.post('/', (req, res) => {
   Product.create(req.body)
-  .then((newProduct) => {
-    res.json(newProduct);
-  })
-  .catch((err) => {
-    res.json(err);
-  });
-});
- 
-  /* req.body should look like this...
-    {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
-    }
-  */
-
-  Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
@@ -68,18 +50,18 @@ router.post('/', (req, res) => {
       console.log(err);
       res.status(400).json(err);
     });
+});
+ 
 
-
-// update product
+// Update Product
 router.put('/:id', (req, res) => {
-  // update product data
+  
   Product.update(req.body, {
     where: {
       id: req.params.id,
     },
   })
     .then((product) => {
-      // find all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })
     .then((productTags) => {
@@ -112,8 +94,8 @@ router.put('/:id', (req, res) => {
     });
 });
 
+// Delete one product by its `id` value
 router.delete('/:id', (req, res) => {
-  // delete one product by its `id` value
   res.json({ success:true, hit: "Delete Product" });
 });
 
