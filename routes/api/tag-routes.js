@@ -5,18 +5,24 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 // Find all tags
 router.get('/', (req, res) => {
-  Tag.findAll().then((tagData) => {
+  Tag.findAll(
+    {
+      include: [Product]
+    }
+  ).then((tagData) => {
     res.json(tagData);
   });
-  // be sure to include its associated Product data
 });
 
 // Find a single tag by its `id`
 router.get('/:id', (req, res) => {
-  Tag.findByPk(req.params.id).then((tagData) => {
+  Tag.findByPk( req.params.id, 
+    {
+      include: [Product]
+    }
+    ).then((tagData) => {
     res.json(tagData);
   });
-  // be sure to include its associated Product data
 });
 
 // Create a new tag
@@ -53,7 +59,8 @@ router.put('/:id', (req, res) => {
 
 // Delete one tag by its `id` value
 router.delete('/:id', (req, res) => {
-  Tag.destroy({
+  Tag.destroy(
+    {
     where: {
       id: req.params.id,
     },

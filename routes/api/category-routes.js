@@ -5,29 +5,28 @@ const { Category, Product } = require('../../models');
 
 // Find all categories
 router.get('/', (req, res) => {
-  Category.findAll({
-
-    // Include all associated Products
-    include: [{
-      model: Product,
-      attributes: ['product_id','product_name']
-    }]
-
-  }).then((categoryData) => {
-    res.json(categoryData);
+  Category.findAll(
+    {
+      // Include all associated Products
+      include: [Product]
+    }
+  ).then((categoryData) => {
+  res.json(categoryData);
   });
 });
 
 // Find one category by its `id` value
 router.get('/:id', (req, res) => {
-  Category.findByPk(req.params.id, {
-
-    // Include all associated Products
-    include: [{
-      model: Product,
-      attributes: ['product_id','product_name']
-    }]
-  })
+  Category.findOne(
+    {
+      where: {
+        id: req.params.id
+      },
+      
+      // Include all associated Products
+      include: [Product]
+    })
+    
   .then((categoryData) => {
     res.json(categoryData);
   });
@@ -68,7 +67,7 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   Category.destroy({
     where: {
-      isbn: req.params.id,
+      id: req.params.id,
     },
   })
     .then((deletedCategory) => {

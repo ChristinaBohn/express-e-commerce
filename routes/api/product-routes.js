@@ -5,25 +5,30 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // Find all products
 router.get('/', (req, res) => {
-  Product.findAll().then((productData) => {
-    // be sure to include its associated Category and Tag data **
-    res.json(productData);
-  });
-});
-
-
-// Find a single product by its `id`
-router.get('/:id', (req, res) => {
-  Product.findOne(
+  Product.findAll(
     {
-      where: { 
-        id: req.params.id 
-      },
+      include: [
+        { model: Category },
+        { model: Tag, through: ProductTag }
+      ]
     }
   ).then((productData) => {
     res.json(productData);
   });
-  // be sure to include its associated Category and Tag data **
+});
+
+// Find a single product by its `id`
+router.get('/:id', (req, res) => {
+  Product.findByPk( req.params.id, {
+
+      include: [
+        { model: Category },
+        { model: Tag, through: ProductTag }
+      ]
+    }
+  ).then((productData) => {
+    res.json(productData);
+  });
 });
 
 // Create a new product
@@ -31,7 +36,7 @@ router.post('/', (req, res) => {
   Product.create(req.body)
     .then((product) => {
 
-      // if there's product tags, we need to create pairings to bulk create in the ProductTag model
+      // if product tags, create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
@@ -97,7 +102,15 @@ router.put('/:id', (req, res) => {
 
 // Delete one product by its `id` value
 router.delete('/:id', (req, res) => {
-  res.json({ success:true, hit: "Delete Product" });
+  Product.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((deletedProduct) => {
+      res.json(deletedProduct);
+    })
+    .catch((err) => res.json(err));
 });
 
 module.exports = router;
