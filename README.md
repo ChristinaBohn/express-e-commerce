@@ -26,6 +26,6 @@ https://github.com/ChristinaBohn/express-e-commerce
 
 ## Exress E-commerce Walkthrough Video
 
-![Exress Ecommerce preview](https://drive.google.com/file/d/1lZ6wea6hNX0F2KsTS8K6Umest3_JEQmZ/view)
+![Exress Ecommerce preview](https://drive.google.com/file/d/1nLCcmcx1xVwhEzPhHSoKwFywyyq2ORZR/view)
 
 
